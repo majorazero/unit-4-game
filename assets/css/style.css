@@ -1,5 +1,6 @@
 .charPlate{
-  background-color: green;
+  background-color: #233237;
+  border: 1px solid #18121e;
   width: 150px;
   margin: 3px;
   text-align: center;
@@ -8,9 +9,30 @@
 .platePic{
   height: 100px;
 }
-.healthPoint {
-
+body{
+  background-image: url("../images/back.jpg");
+  background-size: 1700px;
+  background-repeat: no-repeat;
+  color: #EAC67a;
+  text-shadow: 2px 2px #984b43;
+}
+button{
+  background-color: #18121e;
+  color: #eac67a;
+  text-shadow: 2px 2px #984b43;
+  border: 2px solid #984b43;
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 #tryAgain {
   display:none;
+}
+#enemies {
+  height: 150px;
+}
+ #defender{
+  height: 200px;
+ }
+.img-thumbnail{
+  border-color: #18121e;
 }

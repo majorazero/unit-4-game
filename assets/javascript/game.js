@@ -139,7 +139,7 @@ function plateMake(index){
   let plate = $("<div>"); //<div></div>
   plate.addClass("charPlate id"+index);
   plate.append("<div class='plateName'>"+charList[index].name+"<div>"); //appends the name
-  plate.append("<img class='img-fluid platePic' src='assets/images/"+charList[index].picId+".jpeg'>");
+  plate.append("<img class='img-fluid platePic img-thumbnail' src='assets/images/"+charList[index].picId+".jpeg'>");
   plate.append("<div class='healthPoint'>"+charList[index].healthPoint+"</div>");
   plate.id = index;
   return plate;
