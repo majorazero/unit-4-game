@@ -3,12 +3,10 @@ let currTargetIndex;
 let playerIndex;
 let win;
 init();
-
-
-
-//sets initial game state, also works as a reset
+/**
+* Sets initial game state, also works as a reset
+*/
 function init(){
-  //list of characters with stats.
   charList = [{
       name: "Darth Vader",
       picId: "dVader",
@@ -66,8 +64,42 @@ function init(){
     $("#characters").append(plate);
   }
 }
+/**
+* Sets the game after player chooses their character
+*/
+function gameSet(){
+  $(".charPlate").off("click"); //turns off all previous click events
+  for(let i = 0; i< charList.length; i++) { //look for whoever is or isnt player char
+    if(charList[i].playerChar === false){ //if its an enemy append to enemy board
+      $(".id"+i).detach(); //removes previous non-player elements
 
-//deals with attack button logic
+      let plate = plateMake(i);
+      //well add a choose your enemy function
+      plate.on("click", function() { //if picked will set self to defender
+        charList[plate.id].currTarget = true; //sets this character as currender defender
+        currTargetIndex = plate.id; //also declares to world that there is a current target and the game can start
+        $("#defender").append(this);
+        $(".charPlate").off("click"); //turns off all click events again
+      });
+      $("#enemies").append(plate);
+    }
+  }
+}
+/** Constructs character plates for button presses etc.
+* @param {Integer} index Should be the index of the character in Character list you're intending to make a plate for.
+*/
+function plateMake(index){
+  let plate = $("<div>"); //<div></div>
+  plate.addClass("charPlate id"+index);
+  plate.append("<div class='plateName'>"+charList[index].name+"<div>"); //appends the name
+  plate.append("<img class='img-fluid platePic img-thumbnail' src='assets/images/"+charList[index].picId+".jpeg'>");
+  plate.append("<div class='healthPoint'>"+charList[index].healthPoint+"</div>");
+  plate.id = index;
+  return plate;
+}
+/**
+* This runs the gameplay through the attack button.
+*/
 $("#attackButton").on("click",function() {
   $("#gameMessage").text(""); //resets message
   if (currTargetIndex != null && playerIndex != null){ //meaning that there is a current target. the game can start.
@@ -123,7 +155,7 @@ $("#attackButton").on("click",function() {
         return;
       }
     }
-    //if only you died.
+    //if only the player died.
     else if (player.healthPoint <= 0) {
       $("#gameMessage").text("You got slain! Idiot! LOL.");
       //should replace attack button with try again button.
@@ -136,7 +168,9 @@ $("#attackButton").on("click",function() {
     $("#gameMessage").text("There is no target!"); //informs the player there is no target.
   }
 });
-//try again button resets the game.
+/**
+* Sets the try again button to reset Doc, and re-initialize game state.
+*/
 $("#tryAgain").on("click", function(){
   console.log("hello");
   $("#gameMessage").text("");
@@ -147,34 +181,3 @@ $("#tryAgain").on("click", function(){
   $("#tryAgain").hide();
   $("#attackButton").show();
 });
-
-//constructs plates
-function plateMake(index){
-  let plate = $("<div>"); //<div></div>
-  plate.addClass("charPlate id"+index);
-  plate.append("<div class='plateName'>"+charList[index].name+"<div>"); //appends the name
-  plate.append("<img class='img-fluid platePic img-thumbnail' src='assets/images/"+charList[index].picId+".jpeg'>");
-  plate.append("<div class='healthPoint'>"+charList[index].healthPoint+"</div>");
-  plate.id = index;
-  return plate;
-}
-
-//will move the gameBoard to the proper place
-function gameSet(){
-  $(".charPlate").off("click"); //turns off all previous click events
-  for(let i = 0; i< charList.length; i++) { //look for whoever is or isnt player char
-    if(charList[i].playerChar === false){ //if its an enemy append to enemy board
-      $(".id"+i).detach(); //removes previous non-player elements
-
-      let plate = plateMake(i);
-      //well add a choose your enemy function
-      plate.on("click", function() { //if picked will set self to defender
-        charList[plate.id].currTarget = true; //sets this character as currender defender
-        currTargetIndex = plate.id; //also declares to world that there is a current target and the game can start
-        $("#defender").append(this);
-        $(".charPlate").off("click"); //turns off all click events again
-      });
-      $("#enemies").append(plate);
-    }
-  }
-}
