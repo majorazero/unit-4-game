@@ -1,6 +1,6 @@
 .charPlate{
   background-color: #233237;
-  border: 1px solid #18121e;
+  border: 3px solid #eac67a;
   width: 150px;
   margin: 3px;
   text-align: center;
@@ -29,6 +29,9 @@ button{
 }
 #enemies {
   height: 150px;
+}
+#enemies .charPlate{
+  background-color:#d8574b;
 }
  #defender{
   height: 200px;
