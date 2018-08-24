@@ -38,12 +38,8 @@ let charList = [{
 ]
 //generate character plate for character select
 for (let i = 0; i < charList.length; i++) {
-  let plate = $("<div>"); //<div></div>
-  plate.addClass("charPlate id"+i);
+  let plate = plateMake(i);
   plate.id = i;
-  plate.append("<div class='plateName'>"+charList[i].name+"<div>"); //appends the name
-  plate.append("<img class='img-fluid platePic' src='assets/images/"+charList[i].picId+".jpeg'>");
-  plate.append("<div class='healthPoint'>"+charList[i].healthPoint+"</div>");
   // so forth...
   plate.on("click",function(){
     charList[plate.id] = true; //sets whatever character selected as player character
@@ -52,6 +48,16 @@ for (let i = 0; i < charList.length; i++) {
   //we'll append this all to the characters div
   $("#characters").append(plate);
 }
+//constructs plates
+function plateMake(index){
+  let plate = $("<div>"); //<div></div>
+  plate.addClass("charPlate id"+index);
+  plate.append("<div class='plateName'>"+charList[index].name+"<div>"); //appends the name
+  plate.append("<img class='img-fluid platePic' src='assets/images/"+charList[index].picId+".jpeg'>");
+  plate.append("<div class='healthPoint'>"+charList[index].healthPoint+"</div>");
+  return plate;
+}
+
 //will move the gameBoard to the proper place
 function gameSet(){
   $(".charPlate").off("click"); //turns off all previous click events
@@ -60,14 +66,11 @@ function gameSet(){
     if(charList[i].playerChar === false){ //if its an enemy append to enemy board
       $(".id"+i).remove(); //removes previous non-player elements
 
-      let plate = $("<div>"); //<div></div>
-      plate.addClass("charPlate id"+i);
-      plate.append("<div class='plateName'>"+charList[i].name+"<div>"); //appends the name
-      plate.append("<img class='img-fluid platePic' src='assets/images/"+charList[i].picId+".jpeg'>");
-      plate.append("<div class='healthPoint'>"+charList[i].healthPoint+"</div>");
+      let plate = plateMake(i);
       //well add a choose your enemy function
-      plate.on("click", function() {
-        
+      plate.on("click", function() { //if picked will set self to defender
+        $("#defender").append(this);
+        $(".charPlate").off("click"); //turns off all click events again
       });
       $("#enemies").append(plate);
     }
