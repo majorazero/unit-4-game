@@ -4,6 +4,7 @@ let charList = [{
     picId: "dVader",
     healthPoint: 100,
     attackPower: 12,
+    baseAttack: 12,
     counterAttackPower: 32,
     playerChar: false,
     currTarget: false
@@ -13,6 +14,7 @@ let charList = [{
     picId: "jabba",
     healthPoint: 300,
     attackPower: 4,
+    baseAttack: 4,
     counterAttackPower: 2,
     playerChar: false,
     currTarget: false
@@ -22,32 +24,65 @@ let charList = [{
     picId: "jarJar",
     healthPoint: 600,
     attackPower: 1,
+    baseAttack: 1,
     counterAttackPower: 15,
     playerChar: false,
     currTarget: false
   },
   {
-    name: "Some Guy.",
+    name: "Some Guy",
     picId: "derp",
     healthPoint: 50,
     attackPower: 100,
+    baseAttack: 100,
     counterAttackPower: 1,
     playerChar: false,
     currTarget: false
   }
-]
+];
+let currTargetIndex = null; //determines if there is a current target, and what the pos is.
+let playerIndex = null; //determines where the player character is.
+
 //generate character plate for character select
 for (let i = 0; i < charList.length; i++) {
   let plate = plateMake(i);
-  plate.id = i;
   // so forth...
   plate.on("click",function(){
-    charList[plate.id] = true; //sets whatever character selected as player character
+    charList[plate.id].playerChar = true; //sets whatever character selected as player character
+    playerIndex = plate.id;
     gameSet(); //triggers gameSet function
   });
   //we'll append this all to the characters div
   $("#characters").append(plate);
 }
+
+//deals with attack button logic
+$("#attackButton").on("click",function() {
+  $("#gameMessage").text(""); //resets message
+  if (currTargetIndex != null && playerIndex != null){ //meaning that there is a current target. the game can start.
+    let player = charList[playerIndex];
+    let enemyTarget = charList[currTargetIndex];
+    //target takes dmg from player, deducts health by current player attack
+    enemyTarget.healthPoint -= player.attackPower;
+    //player takes counter attack damage
+    player.healthPoint -= enemyTarget.counterAttackPower;
+    //we display what's happening
+    $("#gameMessage").html(player.name +" attacks "+
+                          enemyTarget.name+" for "+
+                          player.attackPower+" damage!<br>"+
+                          enemyTarget.name+" hits back for "+
+                          enemyTarget.counterAttackPower+" damage!");
+    //plates should update...
+    $(".id"+playerIndex+" .healthPoint").text(player.healthPoint); //should update player health
+    $(".id"+currTargetIndex+" .healthPoint").text(enemyTarget.healthPoint);//update enemy health
+    //player's attack should now improved based on their baseAttack stats
+    player.attackPower += player.baseAttack;
+  }
+  else {
+    $("#gameMessage").text("There is no target!"); //informs the player there is no target.
+  }
+});
+
 //constructs plates
 function plateMake(index){
   let plate = $("<div>"); //<div></div>
@@ -55,6 +90,7 @@ function plateMake(index){
   plate.append("<div class='plateName'>"+charList[index].name+"<div>"); //appends the name
   plate.append("<img class='img-fluid platePic' src='assets/images/"+charList[index].picId+".jpeg'>");
   plate.append("<div class='healthPoint'>"+charList[index].healthPoint+"</div>");
+  plate.id = index;
   return plate;
 }
 
@@ -62,13 +98,14 @@ function plateMake(index){
 function gameSet(){
   $(".charPlate").off("click"); //turns off all previous click events
   for(let i = 0; i< charList.length; i++) { //look for whoever is or isnt player char
-    console.log(charList[i].playerChar);
     if(charList[i].playerChar === false){ //if its an enemy append to enemy board
       $(".id"+i).remove(); //removes previous non-player elements
 
       let plate = plateMake(i);
       //well add a choose your enemy function
       plate.on("click", function() { //if picked will set self to defender
+        charList[plate.id].currTarget = true; //sets this character as currender defender
+        currTargetIndex = plate.id; //also declares to world that there is a current target and the game can start
         $("#defender").append(this);
         $(".charPlate").off("click"); //turns off all click events again
       });
