@@ -1,7 +1,11 @@
 let charList;
 let currTargetIndex;
 let playerIndex;
+let win;
 init();
+
+
+
 //sets initial game state, also works as a reset
 function init(){
   //list of characters with stats.
@@ -46,6 +50,7 @@ function init(){
       currTarget: false
     }
   ];
+  win = 0; //its for me to determine if the player won.
   currTargetIndex = null; //determines if there is a current target, and what the pos is.
   playerIndex = null; //determines where the player character is.
   //generate character plate for character select
@@ -91,6 +96,7 @@ $("#attackButton").on("click",function() {
         $("#attackButton").hide();
         return;
       }
+      win++; //update win counter
       $("#gameMessage").text("You defeated "+enemyTarget.name+"!");
       //we need to renable the onclick function for the leftover recipients.
       for(let i = 0; i < charList.length; i++) {
@@ -108,6 +114,14 @@ $("#attackButton").on("click",function() {
       $("#defender .id"+currTargetIndex).remove();
       //since enemy is dead, we need to reset currTargetIndex to null
       currTargetIndex = null;
+      //check for win, since you can't fight yourself
+      //max win === the character amount - the player
+      if(win === charList.length-1){
+        $("#gameMessage").text("You WIN!");
+        $("#tryAgain").show();
+        $("#attackButton").hide();
+        return;
+      }
     }
     //if only you died.
     else if (player.healthPoint <= 0) {
