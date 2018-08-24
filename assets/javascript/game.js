@@ -77,6 +77,30 @@ $("#attackButton").on("click",function() {
     $(".id"+currTargetIndex+" .healthPoint").text(enemyTarget.healthPoint);//update enemy health
     //player's attack should now improved based on their baseAttack stats
     player.attackPower += player.baseAttack;
+    //we check if the opponent is dead.
+    if(enemyTarget.healthPoint <= 0) { //if their health is 0 or below
+      if(player.healthPoint <= 0) { // if you both died at the same time.
+        $("#gameMessage").text("You are both slain! How did that happen?");
+        return;
+      }
+      $("#gameMessage").text("You defeated "+enemyTarget.name+"!");
+      //we need to renable the onclick function for the leftover recipients.
+      for(let i = 0; i < charList.length; i++) {
+        //we'll only renable the onclick if it is NOT the player or enemyTarget
+        if (i !== playerIndex && i !== currTargetIndex){
+          $(".id"+i).on("click",function(){
+            charList[i].currTarget = true; //sets this character as currender defender
+            currTargetIndex = i; //also declares to world that there is a current target and the game can start
+            $("#defender").append(this);
+            $(".charPlate").off("click"); //turns off all click events again
+          });
+        }
+      }
+      //remove dead defender.
+      $("#defender .id"+currTargetIndex).remove();
+      //since enemy is dead, we need to reset currTargetIndex to null
+      currTargetIndex = null;
+    }
   }
   else {
     $("#gameMessage").text("There is no target!"); //informs the player there is no target.
@@ -99,7 +123,7 @@ function gameSet(){
   $(".charPlate").off("click"); //turns off all previous click events
   for(let i = 0; i< charList.length; i++) { //look for whoever is or isnt player char
     if(charList[i].playerChar === false){ //if its an enemy append to enemy board
-      $(".id"+i).remove(); //removes previous non-player elements
+      $(".id"+i).detach(); //removes previous non-player elements
 
       let plate = plateMake(i);
       //well add a choose your enemy function
