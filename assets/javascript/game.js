@@ -1,59 +1,65 @@
-//list of characters with stats.
-let charList = [{
-    name: "Darth Vader",
-    picId: "dVader",
-    healthPoint: 100,
-    attackPower: 12,
-    baseAttack: 12,
-    counterAttackPower: 32,
-    playerChar: false,
-    currTarget: false
-  },
-  {
-    name: "Jabba",
-    picId: "jabba",
-    healthPoint: 300,
-    attackPower: 4,
-    baseAttack: 4,
-    counterAttackPower: 2,
-    playerChar: false,
-    currTarget: false
-  },
-  {
-    name: "Darth Jar Jar",
-    picId: "jarJar",
-    healthPoint: 600,
-    attackPower: 1,
-    baseAttack: 1,
-    counterAttackPower: 15,
-    playerChar: false,
-    currTarget: false
-  },
-  {
-    name: "Some Guy",
-    picId: "derp",
-    healthPoint: 50,
-    attackPower: 100,
-    baseAttack: 100,
-    counterAttackPower: 1,
-    playerChar: false,
-    currTarget: false
+let charList;
+let currTargetIndex;
+let playerIndex;
+init();
+//sets initial game state, also works as a reset
+function init(){
+  //list of characters with stats.
+  charList = [{
+      name: "Darth Vader",
+      picId: "dVader",
+      healthPoint: 100,
+      attackPower: 12,
+      baseAttack: 12,
+      counterAttackPower: 32,
+      playerChar: false,
+      currTarget: false
+    },
+    {
+      name: "Jabba",
+      picId: "jabba",
+      healthPoint: 300,
+      attackPower: 4,
+      baseAttack: 4,
+      counterAttackPower: 2,
+      playerChar: false,
+      currTarget: false
+    },
+    {
+      name: "Darth Jar Jar",
+      picId: "jarJar",
+      healthPoint: 600,
+      attackPower: 1,
+      baseAttack: 1,
+      counterAttackPower: 15,
+      playerChar: false,
+      currTarget: false
+    },
+    {
+      name: "Some Guy",
+      picId: "derp",
+      healthPoint: 80,
+      attackPower: 100,
+      baseAttack: 100,
+      counterAttackPower: 1,
+      playerChar: false,
+      currTarget: false
+    }
+  ];
+  currTargetIndex = null; //determines if there is a current target, and what the pos is.
+  playerIndex = null; //determines where the player character is.
+  //generate character plate for character select
+  for (let i = 0; i < charList.length; i++) {
+    let plate = plateMake(i);
+    // so forth...
+    plate.on("click",function(){
+      charList[plate.id].playerChar = true; //sets whatever character selected as player character
+      playerIndex = plate.id;
+      gameSet(); //triggers gameSet function
+    });
+    //we'll append this all to the characters div
+    $("#characters").append(plate);
   }
-];
-let currTargetIndex = null; //determines if there is a current target, and what the pos is.
-let playerIndex = null; //determines where the player character is.
-
-//generate character plate for character select
-for (let i = 0; i < charList.length; i++) {
-  let plate = plateMake(i);
-  // so forth...
-  plate.on("click",function(){
-    charList[plate.id].playerChar = true; //sets whatever character selected as player character
-    playerIndex = plate.id;
-    gameSet(); //triggers gameSet function
-  });
-  //we'll append this all to the characters div
-  $("#characters").append(plate);
 }
 
 //deals with attack button logic
@@ -115,6 +121,17 @@ $("#attackButton").on("click",function() {
   else {
     $("#gameMessage").text("There is no target!"); //informs the player there is no target.
   }
+});
+//try again button resets the game.
+$("#tryAgain").on("click", function(){
+  console.log("hello");
+  $("#gameMessage").text("");
+  $("#characters").empty();
+  $("#enemies").empty();
+  $("#defender").empty();
+  init();
+  $("#tryAgain").hide();
+  $("#attackButton").show();
 });
 
 //constructs plates
