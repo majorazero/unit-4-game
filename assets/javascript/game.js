@@ -101,6 +101,11 @@ $("#attackButton").on("click",function() {
       //since enemy is dead, we need to reset currTargetIndex to null
       currTargetIndex = null;
     }
+    //if only you died.
+    else if (player.healthPoint <= 0) {
+      $("#gameMessage").text("You got slain! Idiot! LOL.");
+      return;
+    }
   }
   else {
     $("#gameMessage").text("There is no target!"); //informs the player there is no target.
