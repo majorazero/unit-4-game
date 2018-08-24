@@ -81,6 +81,8 @@ $("#attackButton").on("click",function() {
     if(enemyTarget.healthPoint <= 0) { //if their health is 0 or below
       if(player.healthPoint <= 0) { // if you both died at the same time.
         $("#gameMessage").text("You are both slain! How did that happen?");
+        $("#tryAgain").show();
+        $("#attackButton").hide();
         return;
       }
       $("#gameMessage").text("You defeated "+enemyTarget.name+"!");
@@ -104,6 +106,9 @@ $("#attackButton").on("click",function() {
     //if only you died.
     else if (player.healthPoint <= 0) {
       $("#gameMessage").text("You got slain! Idiot! LOL.");
+      //should replace attack button with try again button.
+      $("#tryAgain").show();
+      $("#attackButton").hide();
       return;
     }
   }
