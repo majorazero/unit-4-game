@@ -2,6 +2,11 @@ let charList;
 let currTargetIndex;
 let playerIndex;
 let win;
+//loads audio
+let gruntSound = document.createElement("audio");
+gruntSound.setAttribute("src","assets/sounds/grunt.mp3");
+let deathSound = document.createElement("audio");
+deathSound.setAttribute("src","assets/sounds/death.mp3");
 init();
 /**
 * Sets initial game state, also works as a reset
@@ -118,6 +123,10 @@ $("#attackButton").on("click",function() {
     //plates should update...
     $(".id"+playerIndex+" .healthPoint").text(player.healthPoint); //should update player health
     $(".id"+currTargetIndex+" .healthPoint").text(enemyTarget.healthPoint);//update enemy health
+    //enenmy plate shakes
+    $("#defender .charPlate").effect("shake",200, function(){
+      gruntSound.play();
+    });
     //player's attack should now improved based on their baseAttack stats
     player.attackPower += player.baseAttack;
     //we check if the opponent is dead.
@@ -143,7 +152,11 @@ $("#attackButton").on("click",function() {
         }
       }
       //remove dead defender.
-      $("#defender .id"+currTargetIndex).remove();
+      $("#defender .charPlate").fadeOut("slow",function(){
+        deathSound.play();// we play their death sound
+        $("#defender .id"+currTargetIndex).remove();
+        $(".ui-effects-placeholder").remove();
+      });
       //since enemy is dead, we need to reset currTargetIndex to null
       currTargetIndex = null;
       //check for win, since you can't fight yourself
