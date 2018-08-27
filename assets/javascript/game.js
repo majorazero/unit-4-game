@@ -154,8 +154,7 @@ $("#attackButton").on("click",function() {
       //remove dead defender.
       $("#defender .charPlate").fadeOut("slow",function(){
         deathSound.play();// we play their death sound
-        $("#defender .id"+currTargetIndex).remove();
-        $(".ui-effects-placeholder").remove();
+        $("#defender").html("");
       });
       //since enemy is dead, we need to reset currTargetIndex to null
       currTargetIndex = null;
